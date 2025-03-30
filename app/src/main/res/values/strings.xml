@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">MediaPlayer</string>
+    <string name="play_video">Play Video</string>
+    <string name="pause_video">Pause Video</string>
+    <string name="stop_video">Stop Video</string>
+    <string name="play_audio">Play Audio</string>
+    <string name="pause_audio">Pause Audio</string>
+    <string name="stop_audio">Stop Audio</string>
+    <string name="open">Open</string>
 </resources>

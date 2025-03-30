@@ -6,6 +6,10 @@ android {
     namespace = "com.bodkasoft.mediaplayer"
     compileSdk = 35
 
+    viewBinding {
+        enable = true
+    }
+
     defaultConfig {
         applicationId = "com.bodkasoft.mediaplayer"
         minSdk = 31
