@@ -6,20 +6,19 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.bodkasoft.mediaplayer.R;
 import com.bodkasoft.mediaplayer.databinding.ActivityMediaListBinding;
 import com.bodkasoft.mediaplayer.item.MediaItem;
+import com.bodkasoft.mediaplayer.reader.UrisReader;
 import com.bodkasoft.mediaplayer.ui.adapter.MediaAdapter;
+import com.bodkasoft.mediaplayer.utils.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MediaListActivity extends AppCompatActivity {
-
     private ActivityMediaListBinding binding;
-    private List<MediaItem> items;
+    private List<MediaItem> items = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,24 +31,18 @@ public class MediaListActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        items = getMediaItems();
+        UrisReader reader = new UrisReader(this);
+
+        items.addAll(reader.getAllAudioItems());
+        items.addAll(reader.getAllVideoItems());
+        items.addAll(reader.getInternalMediaItems());
 
         binding.mediaList.setAdapter(new MediaAdapter(items, item -> {
-            if (item.isVideo()) {
-                Intent intent = new Intent(this, VideoActivity.class);
-                intent.putExtra("MEDIA_URI", item.getUri());
-                intent.putExtra("IS_VIDEO", item.isVideo());
-                startActivity(intent);
-            }
+            Intent intent = (item.directoryType().equals(MediaType.VIDEO))
+                    ? new Intent(this, VideoActivity.class): new Intent(this, AudioActivity.class);
+            intent.putExtra("MEDIA_URI", item.getUri());
+            startActivity(intent);
         }));
-
-    }
-
-    private List<MediaItem> getMediaItems() {
-        return List.of(
-                new MediaItem("kachok", "android.resource://" + getPackageName() + "/" + R.raw.kachok, true),
-                new MediaItem("ai_molodets", "android.resource://" + getPackageName() + "/" + R.raw.ai_molodets, false)
-        );
     }
 
     @Override

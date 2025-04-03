@@ -1,14 +1,16 @@
 package com.bodkasoft.mediaplayer.item;
 
+import com.bodkasoft.mediaplayer.utils.MediaType;
+
 public class MediaItem {
     private final String name;
     private final String uri;
-    private final boolean isVideo;
+    private final MediaType mediaType;
 
-    public MediaItem(String name, String uri, boolean isVideo) {
+    public MediaItem(String name, String uri, MediaType mediaType) {
         this.name = name;
         this.uri = uri;
-        this.isVideo = isVideo;
+        this.mediaType = mediaType;
     }
 
     public String getName() {
@@ -19,7 +21,7 @@ public class MediaItem {
         return uri;
     }
 
-    public boolean isVideo() {
-        return isVideo;
+    public MediaType directoryType() {
+        return mediaType;
     }
 }

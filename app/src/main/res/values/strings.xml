@@ -7,4 +7,9 @@
     <string name="pause_audio">Pause Audio</string>
     <string name="stop_audio">Stop Audio</string>
     <string name="open">Open</string>
+    <string name="stop">Stop</string>
+    <string name="pause">Pause</string>
+    <string name="play">Play</string>
+    <string name="music_player">Music Player</string>
+    <string name="enjoy_your_favorite_tunes_anytime">Enjoy your favorite tunes anytime!</string>
 </resources>

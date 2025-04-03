@@ -33,11 +33,8 @@ public class VideoActivity extends AppCompatActivity {
         setupListeners();
 
         String mediaUri = getIntent().getStringExtra("MEDIA_URI");
-        boolean isVideo = getIntent().getBooleanExtra("IS_VIDEO", false);
 
-        if (isVideo) {
-            playVideo(Uri.parse(mediaUri));
-        }
+        playVideo(Uri.parse(mediaUri));
     }
 
     public void playVideo(Uri videoUri) {
