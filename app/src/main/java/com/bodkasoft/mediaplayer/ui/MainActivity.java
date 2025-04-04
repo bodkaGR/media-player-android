@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(Menu.NONE, IDM_OPEN, 1, "Open")
@@ -79,7 +78,8 @@ public class MainActivity extends AppCompatActivity {
                 ActivityCompat.requestPermissions(this, new String[]{
                         Manifest.permission.READ_MEDIA_AUDIO,
                         Manifest.permission.READ_MEDIA_VIDEO,
-                        Manifest.permission.READ_MEDIA_IMAGES
+                        Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.INTERNET
                 }, 1);
             }
         }

@@ -41,6 +41,7 @@ public class VideoActivity extends AppCompatActivity {
         binding.videoView.setVideoURI(videoUri);
         binding.videoView.setMediaController(mediaController);
         mediaController.setAnchorView(binding.videoView);
+        binding.videoView.requestFocus();
         binding.videoView.start();
     }
 

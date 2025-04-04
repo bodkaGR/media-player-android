@@ -4,7 +4,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.MediaStore;
 
 import com.bodkasoft.mediaplayer.item.MediaItem;
 import com.bodkasoft.mediaplayer.utils.MediaType;
@@ -39,70 +38,35 @@ public class UrisReader {
             String name = file.getName();
             Uri uri = Uri.fromFile(file);
 
-            if (name.toLowerCase().endsWith(".mp3")) {
-                mediaItems.add(new MediaItem(name, uri.toString(), MediaType.MUSIC));
-            } else if (name.toLowerCase().endsWith(".mp4")) {
-                mediaItems.add(new MediaItem(name, uri.toString(), MediaType.VIDEO));
+            MediaType mediaType = MediaType.fromFileName(name);
+            if (mediaType != null) {
+                mediaItems.add(new MediaItem(name, uri.toString(), mediaType));
             }
         }
         return mediaItems;
     }
 
-    public List<MediaItem> getAllAudioItems() {
+    public List<MediaItem> getExternalMediaItems(Uri mediaUri, String[] projection) {
         List<MediaItem> mediaItems = new ArrayList<>();
-        Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {
-            MediaStore.Audio.Media._ID,
-            MediaStore.Audio.Media.DISPLAY_NAME
-        };
 
         Cursor cursor = context.getContentResolver().query(
-            uri, projection, null, null, null
+                mediaUri, projection, null, null, null
         );
 
         if (cursor != null) {
-            int idColumn = cursor.getColumnIndex(MediaStore.Audio.Media._ID);
-            int nameColumn = cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME);
+            int idColumn = cursor.getColumnIndex(projection[0]);
+            int nameColumn = cursor.getColumnIndex(projection[1]);
 
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(idColumn);
-                Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
-                String audioName = cursor.getString(nameColumn);
+                String name = cursor.getString(nameColumn);
+                Uri contentUri = ContentUris.withAppendedId(mediaUri, id);
 
-                mediaItems.add(new MediaItem(audioName, contentUri.toString(), MediaType.MUSIC));
+                mediaItems.add(new MediaItem(name, contentUri.toString(), MediaType.fromFileName(name)));
             }
             cursor.close();
         }
-        return mediaItems;
-    }
 
-    public List<MediaItem> getAllVideoItems() {
-        List<MediaItem> mediaItems = new ArrayList<>();
-        Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {
-            MediaStore.Video.Media._ID,
-            MediaStore.Video.Media.DISPLAY_NAME
-        };
-
-        Cursor cursor = context.getContentResolver().query(
-            uri, projection, null, null, MediaStore.Video.Media.DATE_ADDED + " DESC"
-        );
-
-        if (cursor != null) {
-            int idColumn = cursor.getColumnIndex(MediaStore.Video.Media._ID);
-            int nameColumn = cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME);
-
-            while (cursor.moveToNext()) {
-                long id = cursor.getLong(idColumn);
-                Uri contentUri = ContentUris.withAppendedId(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, id);
-                String audioName = cursor.getString(nameColumn);
-
-                mediaItems.add(new MediaItem(audioName, contentUri.toString(), MediaType.VIDEO));
-            }
-            cursor.close();
-        }
         return mediaItems;
     }
 }

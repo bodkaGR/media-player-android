@@ -6,16 +6,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
 import android.widget.SeekBar;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.bodkasoft.mediaplayer.R;
 import com.bodkasoft.mediaplayer.databinding.ActivityAudioBinding;
 
 public class AudioActivity extends AppCompatActivity {
@@ -79,10 +73,13 @@ public class AudioActivity extends AppCompatActivity {
         });
     }
 
+    // refactor: player not exist if activity is died
     private void updateSeekBar() {
-        binding.seekBar.setProgress(player.getCurrentPosition());
-        if (player.isPlaying()) {
-            handler.postDelayed(this::updateSeekBar, 500);
+        if (player != null) {
+            binding.seekBar.setProgress(player.getCurrentPosition());
+            if (player.isPlaying()) {
+                handler.postDelayed(this::updateSeekBar, 500);
+            }
         }
     }
 
