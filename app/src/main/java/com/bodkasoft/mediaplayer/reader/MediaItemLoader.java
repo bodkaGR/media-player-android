@@ -1,6 +1,5 @@
 package com.bodkasoft.mediaplayer.reader;
 
-import android.content.Context;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Pair;
@@ -14,11 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MediaItemLoader {
-    private final Context context;
     private final UrisReader reader;
 
-    public MediaItemLoader(Context context, UrisReader reader) {
-        this.context = context;
+    public MediaItemLoader(UrisReader reader) {
         this.reader = reader;
     }
 
@@ -41,7 +38,7 @@ public class MediaItemLoader {
         ));
 
         result.addAll(reader.getInternalMediaItems().stream()
-                .filter(mediaItem -> MediaType.fromFileName(mediaItem.getName()).equals(type))
+                .filter(mediaItem -> MediaType.fromMediaName(mediaItem.getName()).equals(type))
                 .collect(Collectors.toList()
         ));
 

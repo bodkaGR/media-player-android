@@ -73,7 +73,6 @@ public class AudioActivity extends AppCompatActivity {
         });
     }
 
-    // refactor: player not exist if activity is died
     private void updateSeekBar() {
         if (player != null) {
             binding.seekBar.setProgress(player.getCurrentPosition());

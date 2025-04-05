@@ -1,20 +1,18 @@
 package com.bodkasoft.mediaplayer.ui;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.MediaController;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.MediaItem;
+import androidx.media3.exoplayer.ExoPlayer;
 
-import com.bodkasoft.mediaplayer.R;
 import com.bodkasoft.mediaplayer.databinding.VideoActivityBinding;
 
 public class VideoActivity extends AppCompatActivity {
-    private MediaController mediaController;
+    private ExoPlayer player;
     private VideoActivityBinding binding;
 
     @Override
@@ -28,43 +26,46 @@ public class VideoActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        mediaController = new MediaController(this);
-
-        setupListeners();
-
         String mediaUri = getIntent().getStringExtra("MEDIA_URI");
 
-        playVideo(Uri.parse(mediaUri));
+        player = new ExoPlayer.Builder(this).build();
+        binding.playerView.setPlayer(player);
+
+        playVideo(mediaUri);
     }
 
-    public void playVideo(Uri videoUri) {
-        binding.videoView.setVideoURI(videoUri);
-        binding.videoView.setMediaController(mediaController);
-        mediaController.setAnchorView(binding.videoView);
-        binding.videoView.requestFocus();
-        binding.videoView.start();
-    }
-
-    private void setupListeners() {
-        binding.videoView.setOnErrorListener((mp, what, extra) -> {
-            Log.e("VideoView", "Error: " + what + ", Extra: " + extra);
-            return true;
-        });
+    public void playVideo(String videoUri) {
+        MediaItem mediaItem = MediaItem.fromUri(videoUri);
+        player.setMediaItem(mediaItem);
+        player.prepare();
+        player.play();
     }
 
     @Override
     protected void onPause() {
         Log.v("MediaVideo", "onPause");
         super.onPause();
-        binding.videoView.pause();
-        binding.videoView.setVisibility(View.GONE);
+        if (player != null) {
+            player.pause();
+        }
     }
 
     @Override
     protected void onResume() {
         Log.v("MediaVideo", "onResume");
         super.onResume();
-        binding.videoView.resume();
+        if (player != null) {
+            player.play();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (player != null) {
+            player.release();
+            player = null;
+        }
     }
 
     @Override

@@ -38,7 +38,7 @@ public class UrisReader {
             String name = file.getName();
             Uri uri = Uri.fromFile(file);
 
-            MediaType mediaType = MediaType.fromFileName(name);
+            MediaType mediaType = MediaType.fromMediaName(name);
             if (mediaType != null) {
                 mediaItems.add(new MediaItem(name, uri.toString(), mediaType));
             }
@@ -62,11 +62,10 @@ public class UrisReader {
                 String name = cursor.getString(nameColumn);
                 Uri contentUri = ContentUris.withAppendedId(mediaUri, id);
 
-                mediaItems.add(new MediaItem(name, contentUri.toString(), MediaType.fromFileName(name)));
+                mediaItems.add(new MediaItem(name, contentUri.toString(), MediaType.fromMediaName(name)));
             }
             cursor.close();
         }
-
         return mediaItems;
     }
 }

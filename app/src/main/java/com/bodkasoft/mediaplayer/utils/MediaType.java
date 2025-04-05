@@ -1,10 +1,25 @@
 package com.bodkasoft.mediaplayer.utils;
 
+import android.app.Activity;
+
+import com.bodkasoft.mediaplayer.ui.AudioActivity;
+import com.bodkasoft.mediaplayer.ui.VideoActivity;
+
 import java.util.Arrays;
 
 public enum MediaType {
-    MUSIC(".mp3"),
-    VIDEO(".mp4");
+    MUSIC(".mp3") {
+        @Override
+        public Class<? extends Activity> getTargetActivity() {
+            return AudioActivity.class;
+        }
+    },
+    VIDEO(".mp4") {
+        @Override
+        public Class<? extends Activity> getTargetActivity() {
+            return VideoActivity.class;
+        }
+    };
 
     private final String extension;
 
@@ -12,9 +27,11 @@ public enum MediaType {
         this.extension = extension;
     }
 
-    public static MediaType fromFileName(String fileName) {
+    public abstract Class<? extends Activity> getTargetActivity();
+
+    public static MediaType fromMediaName(String mediaName) {
         return Arrays.stream(values())
-                .filter(mediaType -> fileName.toLowerCase().endsWith(mediaType.extension))
+                .filter(mediaType -> mediaName.toLowerCase().endsWith(mediaType.extension))
                 .findFirst()
                 .orElse(null);
     }

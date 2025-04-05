@@ -18,7 +18,6 @@ import androidx.core.content.ContextCompat;
 import com.bodkasoft.mediaplayer.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-
     private ActivityMainBinding binding;
     private static final int IDM_OPEN = 1001;
 
@@ -32,6 +31,19 @@ public class MainActivity extends AppCompatActivity {
         requestReadMediaPermissions();
 
         ActionBar actionBar = this.getActionBar();
+    }
+
+    private void requestReadMediaPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.READ_MEDIA_AUDIO,
+                        Manifest.permission.READ_MEDIA_VIDEO,
+                        Manifest.permission.READ_MEDIA_IMAGES,
+                        Manifest.permission.INTERNET
+                }, 1);
+            }
+        }
     }
 
     @Override
@@ -70,18 +82,5 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         binding = null;
-    }
-
-    private void requestReadMediaPermissions() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                ActivityCompat.requestPermissions(this, new String[]{
-                        Manifest.permission.READ_MEDIA_AUDIO,
-                        Manifest.permission.READ_MEDIA_VIDEO,
-                        Manifest.permission.READ_MEDIA_IMAGES,
-                        Manifest.permission.INTERNET
-                }, 1);
-            }
-        }
     }
 }

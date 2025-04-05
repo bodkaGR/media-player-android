@@ -3,7 +3,6 @@ package com.bodkasoft.mediaplayer.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -22,7 +21,6 @@ import com.bodkasoft.mediaplayer.utils.MediaType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class MediaListActivity extends AppCompatActivity {
     private ActivityMediaListBinding binding;
@@ -42,13 +40,12 @@ public class MediaListActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        loader = new MediaItemLoader(this, new UrisReader(this));
+        loader = new MediaItemLoader(new UrisReader(this));
 
         items.addAll(loader.loadAllMedia());
 
         adapter = new MediaAdapter(items, item -> {
-            Intent intent = (item.directoryType().equals(MediaType.VIDEO))
-                    ? new Intent(this, VideoActivity.class): new Intent(this, AudioActivity.class);
+            Intent intent = new Intent(this, item.getMediaType().getTargetActivity());
             intent.putExtra("MEDIA_URI", item.getUri());
             startActivity(intent);
         });
@@ -56,7 +53,6 @@ public class MediaListActivity extends AppCompatActivity {
         binding.mediaList.setAdapter(adapter);
     }
 
-    // refactor this shit
     private void showMediaTypeChooser() {
         String[] types = {"Аудіо", "Відео", "Завантажити з Інтернету"};
         new AlertDialog.Builder(this)
@@ -79,7 +75,6 @@ public class MediaListActivity extends AppCompatActivity {
                 .show();
     }
 
-    // refactor this shit
     private void showInternetUrlInput() {
         EditText input = new EditText(this);
         input.setHint("Enter media file URL");
@@ -92,27 +87,17 @@ public class MediaListActivity extends AppCompatActivity {
                     if (!url.isEmpty()) {
                         openInternetMedia(url);
                     }else {
-                        Toast.makeText(this, "URL не може бути порожнім", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "URL must not be empty", Toast.LENGTH_SHORT).show();
                     }
                 }))
-                .setNegativeButton("Cancle", null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
-    // refactor this shit
     private void openInternetMedia(String url) {
-        String lower = url.toLowerCase();
-        Intent intent;
+        MediaType mediaType = MediaType.fromMediaName(url);
 
-        if (lower.endsWith(".mp4") || lower.contains("video")) {
-            intent = new Intent(this, VideoActivity.class);
-        } else if (lower.endsWith(".mp3") || lower.contains("audio")) {
-            intent = new Intent(this, AudioActivity.class);
-        } else {
-            Toast.makeText(this, "Невідомий тип файлу", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
+        Intent intent = new Intent(this, mediaType.getTargetActivity());
         intent.putExtra("MEDIA_URI", Uri.parse(url).toString());
         startActivity(intent);
     }

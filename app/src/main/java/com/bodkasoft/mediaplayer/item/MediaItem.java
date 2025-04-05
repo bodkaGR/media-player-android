@@ -21,7 +21,7 @@ public class MediaItem {
         return uri;
     }
 
-    public MediaType directoryType() {
+    public MediaType getMediaType() {
         return mediaType;
     }
 }
