@@ -12,10 +12,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UrisReader {
+public class StorageReader {
     private final Context context;
 
-    public UrisReader(Context context) {
+    public StorageReader(Context context) {
         this.context = context;
     }
 

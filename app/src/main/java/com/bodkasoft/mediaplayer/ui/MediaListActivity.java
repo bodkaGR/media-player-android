@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bodkasoft.mediaplayer.databinding.ActivityMediaListBinding;
 import com.bodkasoft.mediaplayer.item.MediaItem;
 import com.bodkasoft.mediaplayer.reader.MediaItemLoader;
-import com.bodkasoft.mediaplayer.reader.UrisReader;
+import com.bodkasoft.mediaplayer.reader.StorageReader;
 import com.bodkasoft.mediaplayer.ui.adapter.MediaAdapter;
 import com.bodkasoft.mediaplayer.utils.MediaType;
 
@@ -40,7 +40,7 @@ public class MediaListActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        loader = new MediaItemLoader(new UrisReader(this));
+        loader = new MediaItemLoader(new StorageReader(this));
 
         items.addAll(loader.loadAllMedia());
 

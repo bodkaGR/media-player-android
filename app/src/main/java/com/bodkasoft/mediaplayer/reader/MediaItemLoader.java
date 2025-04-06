@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MediaItemLoader {
-    private final UrisReader reader;
+    private final StorageReader reader;
 
-    public MediaItemLoader(UrisReader reader) {
+    public MediaItemLoader(StorageReader reader) {
         this.reader = reader;
     }
 
